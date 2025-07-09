@@ -21,9 +21,10 @@ const getTasks = async (req, res) => {
 const getTaskById = async (req, res) => {
     try {
         const {id} = req.params;
+        const cleanId = id.trim(); // Ensure ID is trimmed of whitespace
 
         // Find task by ID and ensure it belongs to the user
-        const task = await Task.findOne({ _id: id, user: req.user.userId });
+        const task = await Task.findOne({ _id: cleanId, user: req.user.userId });
         if (!task) {
             return res.status(404).json({
                 success: false,
@@ -84,11 +85,12 @@ const getTaskById = async (req, res) => {
  const updateTask = async (req, res) => {
      try {
          const { id } = req.params;
+         const cleanId = req.params.id.trim(); // Ensure ID is trimmed of whitespace
          const { title, description, status, priority, dueDate } = req.body;
 
          // Find task by ID and ensure it belongs to the user
          const task = await Task.findOne(
-                { _id: id, user: req.user.userId }
+                { _id: cleanId, user: req.user.userId }
          )
          if(!task){
                 return res.status(404).json({
@@ -125,10 +127,10 @@ const getTaskById = async (req, res) => {
  const deleteTask = async (req, res) => {
         try {
             const { id } = req.params;
-
+            const cleanId = req.params.id.trim(); // Ensure ID is trimmed of whitespace
             // Find task by ID and ensure it belongs to the user
             const task = await Task.findOneAndDelete({
-                _id: id,
+                _id: cleanId,
                 user: req.user.userId
             });
             if (!task) {
