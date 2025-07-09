@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-
+const authMiddleware = require('../middleware/auth');
+const { getTasks, createTask, updateTask, deleteTask, getTaskById } = require('../controllers/taskController');
 // TODO: Import task controllers and auth middleware
 
-// Placeholder routes
-router.get('/tasks', (req, res) => {
-  res.json({ message: 'Get tasks route - TODO' });
-});
+router.get('/tasks', authMiddleware, getTasks);
+router.get('/tasks/:id', authMiddleware, getTaskById);
 
-router.post('/tasks', (req, res) => {
-  res.json({ message: 'Create task route - TODO' });
-});
+router.post('/tasks', authMiddleware, createTask);
+
+router.put('/tasks/:id', authMiddleware, updateTask);
+
+router.delete('/tasks/:id', authMiddleware, deleteTask);
 
 module.exports = router;

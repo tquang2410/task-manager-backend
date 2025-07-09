@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 const taskSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Please provide a task title'],
+    required: true,
     trim: true,
-    maxlength: [100, 'Title cannot be more than 100 characters']
+    maxlength: 100
   },
   description: {
     type: String,
     trim: true,
-    maxlength: [500, 'Description cannot be more than 500 characters']
+    maxlength: 500
   },
   status: {
     type: String,
@@ -24,7 +24,7 @@ const taskSchema = new mongoose.Schema({
   },
   dueDate: {
     type: Date,
-    required: [true, 'Please provide a due date']
+    required: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -35,4 +35,6 @@ const taskSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Task', taskSchema);
+const Task = mongoose.model('Task', taskSchema);
+
+module.exports = Task;

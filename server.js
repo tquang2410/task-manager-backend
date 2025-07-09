@@ -12,14 +12,8 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-const delayMiddleware = require('./middleware/delay');
-app.use((req, res, next) => {
-    console.log(`📝 ${req.method} ${req.url}`, req.body);
-    next();
-});
+
 // Routes
-// Apply delay to all API routes
-app.use('/v1/api', delayMiddleware);
 app.use('/v1/api', require('./routes/auth'));
 app.use('/v1/api', require('./routes/tasks'));
 
