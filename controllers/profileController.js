@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const bcryptjs = require('bcryptjs');
 
 // GET /v1/api/account - Get current user profile
 const getProfile = async (req, res) => {
@@ -84,7 +85,75 @@ const updateProfile = async (req, res) => {
         });
     }
 };
+
+// PUT /v1/api/account/password - Update password
+const updatePassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        // Validation
+        if (!oldPassword || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                EM: 'Current password and new password are required'
+            });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({
+                success: false,
+                EM: 'New password must be at least 6 characters'
+            });
+        }
+
+        // Get user with password để verify
+        const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                EM: 'User not found'
+            });
+        }
+
+        // Verify current password
+        const isValidPassword = await bcryptjs.compare(oldPassword, user.password);
+        if (!isValidPassword) {
+            return res.status(400).json({
+                success: false,
+                EM: 'Current password is incorrect'
+            });
+        }
+
+        // Hash new password
+        const saltRounds = 10;
+        const hashedNewPassword = await bcryptjs.hash(newPassword, saltRounds);
+
+        // Update password
+        await User.findByIdAndUpdate(
+            req.user.userId,
+            {
+                password: hashedNewPassword,
+                updatedAt: new Date()
+            },
+            { runValidators: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Password updated successfully'
+        });
+
+    } catch (error) {
+        console.error('Update password error:', error);
+        res.status(500).json({
+            success: false,
+            EM: 'Server error while updating password'
+        });
+    }
+};
+
 module.exports = {
     getProfile,
     updateProfile,
+    updatePassword  // ← Export thêm function mới
 };
