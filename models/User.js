@@ -5,6 +5,12 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
+  avatarId: {
+    type: Number,
+    default: 1, // Default avatar ID
+    min: 1,
+    max: 10
+  }
 });
 
 // Hash password before saving

@@ -47,6 +47,7 @@ const register = async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
+            avatarId: user.avatarId || 1,
             createdAt: user.createdAt
         };
 
@@ -105,6 +106,7 @@ const login = async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
+            avatarId: user.avatarId || 1,
             createdAt: user.createdAt,
         };
 

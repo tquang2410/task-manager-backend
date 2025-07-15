@@ -18,6 +18,7 @@ const getProfile = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                avatarId: user.avatarId || 1, // Default avatar ID if not set
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
             }
@@ -34,13 +35,22 @@ const getProfile = async (req, res) => {
 // PUT /v1/api/account - Update user profile
 const updateProfile = async (req, res) => {
     try {
-        const { name } = req.body;
+        const { name,avatarId } = req.body;
         // Validate input
         if (!name || name.trim().length === 0) {
             return res.status(400).json({
                 success: false,
                 EM: 'Name is required',
             });
+        }
+        // Validate avatarId if provided
+        if (avatarId !== undefined) {
+            if (!Number.isInteger(avatarId) || avatarId < 1 || avatarId > 10) {
+                return res.status(400).json({
+                    success: false,
+                    EM: 'Avatar ID must be between 1 and 10',
+                });
+            }
         }
         if (name.trim().length < 2 || name.trim().length > 50) {
             return res.status(400).json({
@@ -53,6 +63,7 @@ const updateProfile = async (req, res) => {
             req.user.userId,
             {
                 name: name.trim(),
+                ...(avatarId !== undefined && { avatarId }),
                 updatedAt: new Date(),
             },
             {
@@ -73,6 +84,7 @@ const updateProfile = async (req, res) => {
                 id: updatedUser._id,
                 name: updatedUser.name,
                 email: updatedUser.email,
+                avatarId: updatedUser.avatarId || 1, // Default avatar ID if not set
                 createdAt: updatedUser.createdAt,
                 updatedAt: updatedUser.updatedAt,
             }
