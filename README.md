@@ -1,39 +1,64 @@
 # Task Manager - Full Stack Application
+## 📝 Mô tả
+Task Manager là ứng dụng quản lý công việc full-stack cho phép người dùng:
+- Tạo, sửa, xóa tasks
+- Quản lý profile cá nhân
+- Authentication với JWT
+- Responsive design với Ant Design
+## ⚙️ Yêu cầu hệ thống
+- Node.js >= 16.0.0
+- MongoDB >= 5.0
+- npm hoặc yarn
 
 ## 📁 Cấu trúc Project
 
 ```
-task-manager-system/
-├── task-manager-backend/     # Node.js + Express + MongoDB
-└── task-manager-frontend/    # React + Vite + Ant Design
-```
+**Frontend:**
+task-manager-frontend/
+├── src/
+│   ├── components/  # Reusable components
+│   ├── pages/      # Main pages
+│   ├── hooks/      # Custom hooks
+│   ├── store/      # Redux slices
+│   └── api/        # API services
 
+```
+```
+**Backend:**
+task-manager-backend/
+├── controllers/     # Business logic
+├── models/         # Database schemas
+├── routes/         # API routes
+├── middleware/     # Auth, validation
+└── config/         # Database config
+
+```
 ## 🔄 Luồng tương tác Frontend ↔ Backend
 
 ### **Authentication**
 
 **Register:**
-Frontend: `RegisterForm.jsx` → Backend: `authController.js` → Frontend: `AuthContext.jsx`
+Frontend: `RegisterForm.jsx` → Backend: `authController.js` → Frontend: `useAuth.js` → `authSlice.js`
 
 **Login:**
-Frontend: `LoginForm.jsx` → Backend: `authController.js` → Frontend: `AuthContext.jsx`
+Frontend: `LoginForm.jsx` → Backend: `authController.js` → Frontend: `useAuth.js` → `authSlice.js`
 
 **Profile Update:**
-Frontend: `ProfileForm.jsx` → Backend: `profileController.js` → Frontend: `AuthContext.jsx`
+Frontend: `ProfileForm.jsx` → Backend: `profileController.js` → Frontend: `useAuth.js` → `authSlice.js`
 
 ### **Task Management**
 
 **Load Tasks:**
-Frontend: `TaskContext.jsx` → Backend: `taskController.js` → Frontend: `TaskContext.jsx`
+Frontend: `Tasks.jsx` → `useTask.js` → Backend: `taskController.js` → Frontend: `useTask.js` → `taskSlice.js`
 
 **Create Task:**
-Frontend: `TaskModal.jsx` → Backend: `taskController.js` → Frontend: `TaskContext.jsx`
+Frontend: `TaskForm.jsx` → `useTask.js` → Backend: `taskController.js` → Frontend: `useTask.js` → `taskSlice.js`
 
 **Update Task:**
-Frontend: `TaskList.jsx` → Backend: `taskController.js` → Frontend: `TaskContext.jsx`
+Frontend: `TaskModal.jsx` → `useTask.js` → Backend: `taskController.js` → Frontend: `useTask.js` → `taskSlice.js`
 
 **Delete Task:**
-Frontend: `TasksPage.jsx` → Backend: `taskController.js` → Frontend: `TaskContext.jsx`
+Frontend: `TaskList.jsx` → `useTask.js` → Backend: `taskController.js` → Frontend: `useTask.js` → `taskSlice.js`
 
 ## 🛡️ Security Flow
 
@@ -46,8 +71,10 @@ Frontend: `axios.config.js` (add JWT) → Backend: `middleware/auth.js` (verify 
 ## 📊 State Management
 
 **Frontend:**
-- `AuthContext.jsx` - User authentication state
-- `TaskContext.jsx` - Task data với useReducer
+- `authSlice.js` - User authentication state với Redux
+- `taskSlice.js` - Task data với Redux
+- `useAuth.js` - Custom hook cho authentication
+- `useTask.js` - Custom hook cho task management
 
 **Backend:**
 - `models/User.js` - User data trong MongoDB
@@ -78,6 +105,13 @@ npm run dev  # Port 8080
 ```bash
 cd task-manager-frontend  
 npm run dev  # Port 5173
+```
+### Backend Setup:
+```bash
+cd task-manager-backend
+npm install
+cp .env.example .env  # Cấu hình database
+npm run dev
 ```
 
 **Tech Stack:**
